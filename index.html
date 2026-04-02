@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee LAB | Engineered to Perfection</title>
+    
+    <!-- Fonts: Inter for body, Poppins for headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons (Premium minimal icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lab: {
+                            black: '#0D0D0D',
+                            dark: '#111111',
+                            brown: '#8B5E3C',
+                            cream: '#EDE3D9',
+                            white: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Utilities */
+        body {
+            background-color: #0D0D0D;
+            color: #EDE3D9;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0D0D0D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8B5E3C;
+            border-radius: 4px;
+        }
+
+        /* Premium Glassmorphism */
+        .glass-nav {
+            background: rgba(13, 13, 13, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glow Effects */
+        .glow-brown {
+            box-shadow: 0 0 30px rgba(139, 94, 60, 0.3);
+        }
+        .glow-brown-hover:hover {
+            box-shadow: 0 0 40px rgba(139, 94, 60, 0.5);
+            transform: translateY(-2px);
+        }
+        .glow-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139,94,60,0.4) 0%, rgba(13,13,13,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            filter: blur(20px);
+        }
+
+        /* Scroll Reveal Initial States */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Hide scrollbar for slider but keep functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Hero Parallax Overlay */
+        .hero-overlay {
+            background: linear-gradient(to bottom, rgba(13,13,13,0.4) 0%, #0D0D0D 100%);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-lab-brown selection:text-lab-white">
+
+    <!-- Preloader -->
+    <div id="preloader" class="fixed inset-0 z-[100] bg-lab-black flex items-center justify-center transition-opacity duration-700">
+        <div class="relative flex flex-col items-center">
+            <div class="w-16 h-16 border-4 border-lab-brown/30 border-t-lab-brown rounded-full animate-spin"></div>
+            <div class="mt-6 font-display font-bold text-2xl tracking-[0.2em] text-lab-white uppercase">Coffee<span class="text-lab-brown">LAB</span></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-6">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+            <a href="#" class="font-display font-bold text-2xl tracking-[0.15em] text-lab-white relative z-10">
+                COFFEE<span class="text-lab-brown">LAB</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-10 font-sans text-sm tracking-widest uppercase text-lab-cream/80">
+                <a href="#about" class="hover:text-lab-white hover:text-shadow transition-colors">About</a>
+                <a href="#features" class="hover:text-lab-white transition-colors">Features</a>
+                <a href="#menu" class="hover:text-lab-white transition-colors">Menu</a>
+                <a href="#location" class="hover:text-lab-white transition-colors">Location</a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-lab-white text-2xl relative z-10" id="mobile-menu-btn">
+                <i class="ph ph-list"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-lab-black/95 backdrop-blur-lg flex flex-col items-center justify-center space-y-8 text-xl font-display tracking-widest uppercase opacity-0 pointer-events-none transition-opacity duration-300 z-0">
+            <a href="#about" class="mobile-link text-lab-cream hover:text-lab-brown transition-colors">About</a>
+            <a href="#features" class="mobile-link text-lab-cream hover:text-lab-brown transition-colors">Features</a>
+            <a href="#menu" class="mobile-link text-lab-cream hover:text-lab-brown transition-colors">Menu</a>
+            <a href="#location" class="mobile-link text-lab-cream hover:text-lab-brown transition-colors">Location</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper (Home Page) -->
+    <div id="home-page">
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Image with Parallax setup -->
+        <div id="hero-bg" class="absolute inset-0 z-0 w-full h-[120%] -top-[10%] bg-[url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 z-0 hero-overlay"></div>
+        
+        <!-- Content -->
+        <div class="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center pt-20" id="hero-content">
+            <!-- Glowing Logo Graphic -->
+            <div class="relative mb-10 w-32 h-32 flex items-center justify-center">
+                <div class="glow-ring animate-pulse-slow"></div>
+                <i class="ph ph-flask text-6xl text-lab-white drop-shadow-[0_0_15px_rgba(139,94,60,0.8)] relative z-10"></i>
+            </div>
+            
+            <h1 class="font-display font-extrabold text-5xl md:text-7xl lg:text-8xl tracking-tight text-lab-white mb-6 uppercase leading-tight">
+                Coffee,<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-lab-white to-lab-brown">Engineered</span><br>
+                To Perfection.
+            </h1>
+            
+            <p class="font-sans text-lg md:text-xl text-lab-cream/80 max-w-2xl mx-auto mb-10 tracking-wide font-light">
+                Precision. Passion. People.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center w-full sm:w-auto">
+                <a href="#menu" class="px-10 py-4 bg-lab-brown text-lab-white font-sans font-semibold tracking-wider uppercase text-sm rounded-full glow-brown-hover transition-all text-center w-full sm:w-auto">
+                    View Menu
+                </a>
+                <a href="#location" class="px-10 py-4 border border-lab-cream/30 text-lab-cream hover:border-lab-white hover:text-lab-white font-sans font-semibold tracking-wider uppercase text-sm rounded-full transition-all backdrop-blur-sm text-center w-full sm:w-auto">
+                    Visit Us
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center animate-bounce">
+            <span class="text-xs uppercase tracking-widest text-lab-cream/50 mb-2 font-sans">Scroll</span>
+            <i class="ph ph-caret-down text-lab-brown text-xl"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 md:py-32 bg-lab-black relative">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <!-- Left: Image -->
+            <div class="relative reveal order-2 md:order-1">
+                <div class="absolute inset-0 bg-lab-brown/20 rounded-2xl transform translate-x-4 translate-y-4"></div>
+                <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1974&auto=format&fit=crop" alt="Barista pulling an espresso shot" class="relative z-10 rounded-2xl w-full h-[500px] object-cover grayscale-[20%] border border-lab-white/10">
+            </div>
+            
+            <!-- Right: Text -->
+            <div class="reveal order-1 md:order-2">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="h-px w-12 bg-lab-brown"></div>
+                    <span class="font-sans text-lab-brown tracking-[0.2em] uppercase text-sm font-semibold">The Methodology</span>
+                </div>
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-lab-white mb-8 leading-tight">
+                    We don't just make coffee.<br>
+                    <span class="text-lab-brown">We engineer it.</span>
+                </h2>
+                <div class="space-y-6 font-sans text-lab-cream/70 text-lg font-light leading-relaxed">
+                    <p>
+                        Every espresso, every pour, every microscopic detail is crafted with relentless precision and passion. We treat our bar as a laboratory where variables are controlled, and excellence is the only acceptable outcome.
+                    </p>
+                    <p>
+                        But it's not just about the science. Our team brings raw energy, unyielding personality, and absolute consistency into every single cup. Experience the intersection of art and engineering.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Signature Features (Lab Cards) -->
+    <section id="features" class="py-24 bg-lab-dark border-y border-lab-white/5 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 md:mb-20 reveal">
+                <h2 class="font-display text-3xl md:text-4xl font-bold text-lab-white uppercase tracking-wider">Lab Modules</h2>
+                <p class="text-lab-cream/60 mt-4 font-sans tracking-wide">The foundational elements of our experience.</p>
+            </div>
+            
+            <!-- Mobile Horizontal Scroll, Desktop Grid -->
+            <div class="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar pb-6 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0">
+                <!-- Card 1 -->
+                <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center group bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(139,94,60,0.15)] reveal">
+                    <i class="ph ph-thermometer text-4xl text-lab-brown mb-6"></i>
+                    <h3 class="font-display text-xl font-semibold text-lab-white mb-3">Precision Brewing</h3>
+                    <p class="font-sans text-lab-cream/60 text-sm leading-relaxed">Exact temperatures, exact weights, exact extraction times. No guessing, just perfection.</p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center group bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(139,94,60,0.15)] reveal" style="transition-delay: 100ms;">
+                    <i class="ph ph-croissant text-4xl text-lab-brown mb-6"></i>
+                    <h3 class="font-display text-xl font-semibold text-lab-white mb-3">Fresh Crafted Food</h3>
+                    <p class="font-sans text-lab-cream/60 text-sm leading-relaxed">Artisan pastries and highly calculated nutrition designed to perfectly pair with our roasts.</p>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center group bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(139,94,60,0.15)] reveal" style="transition-delay: 200ms;">
+                    <i class="ph ph-lightning text-4xl text-lab-brown mb-6"></i>
+                    <h3 class="font-display text-xl font-semibold text-lab-white mb-3">Vibrant Atmosphere</h3>
+                    <p class="font-sans text-lab-cream/60 text-sm leading-relaxed">Industrial aesthetics meet warm community energy. A space built for focus and connection.</p>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center group bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(139,94,60,0.15)] reveal" style="transition-delay: 300ms;">
+                    <div class="flex items-center gap-1 mb-6">
+                        <i class="ph-fill ph-star text-lab-brown text-4xl"></i>
+                        <span class="text-lab-white font-display font-bold text-xl ml-2">4.8</span>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold text-lab-white mb-3">Top Rated</h3>
+                    <p class="font-sans text-lab-cream/60 text-sm leading-relaxed">Consistently ranked as the superior coffee experience by those who know the difference.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-24 bg-lab-black">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Img 1 -->
+                <div class="relative aspect-square overflow-hidden rounded-xl group cursor-pointer reveal gallery-item" data-src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=2037&auto=format&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Latte Art">
+                    <div class="absolute inset-0 bg-lab-brown/0 group-hover:bg-lab-brown/40 transition-colors duration-500 flex items-center justify-center">
+                        <i class="ph ph-magnifying-glass-plus text-lab-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0"></i>
+                    </div>
+                </div>
+                <!-- Img 2 -->
+                <div class="relative aspect-square overflow-hidden rounded-xl group cursor-pointer reveal gallery-item delay-100" data-src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=1964&auto=format&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[30%]" alt="Coffee beans">
+                    <div class="absolute inset-0 bg-lab-brown/0 group-hover:bg-lab-brown/40 transition-colors duration-500 flex items-center justify-center">
+                        <i class="ph ph-magnifying-glass-plus text-lab-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0"></i>
+                    </div>
+                </div>
+                <!-- Img 3 (Spans 2 cols on desktop) -->
+                <div class="relative aspect-square md:col-span-2 overflow-hidden rounded-xl group cursor-pointer reveal gallery-item delay-200" data-src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?q=80&w=2070&auto=format&fit=crop">
+                    <img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Interior vibe">
+                    <div class="absolute inset-0 bg-lab-brown/0 group-hover:bg-lab-brown/40 transition-colors duration-500 flex items-center justify-center">
+                        <i class="ph ph-magnifying-glass-plus text-lab-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-4 group-hover:translate-y-0"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="py-24 bg-lab-dark border-y border-lab-white/5 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex justify-between items-end mb-16 reveal">
+                <div>
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-lab-white uppercase tracking-wider">Field Data</h2>
+                    <p class="text-lab-cream/60 mt-2 font-sans">Verified feedback from our community.</p>
+                </div>
+                <!-- Slider Controls (Desktop) -->
+                <div class="hidden md:flex gap-4">
+                    <button id="prev-review" class="w-12 h-12 rounded-full border border-lab-white/20 flex items-center justify-center text-lab-white hover:bg-lab-brown hover:border-lab-brown transition-colors"><i class="ph ph-arrow-left"></i></button>
+                    <button id="next-review" class="w-12 h-12 rounded-full border border-lab-white/20 flex items-center justify-center text-lab-white hover:bg-lab-brown hover:border-lab-brown transition-colors"><i class="ph ph-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Slider Container -->
+            <div id="reviews-slider" class="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-8 -mx-6 px-6 md:mx-0 md:px-0 reveal">
+                
+                <!-- Review 1 -->
+                <div class="min-w-[85vw] md:min-w-[400px] snap-center bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/10 relative glow-brown-hover transition-all duration-300 group">
+                    <i class="ph-fill ph-quotes text-5xl text-lab-brown/20 absolute top-6 right-6"></i>
+                    <div class="flex gap-1 mb-6">
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                    </div>
+                    <p class="font-sans text-lab-cream text-lg font-light leading-relaxed mb-6">
+                        "Our absolute favourite coffee place. The precision they put into a simple flat white is unmatched. It’s ruined other shops for me."
+                    </p>
+                    <div class="font-display font-semibold text-lab-white tracking-wide">— Sarah V.</div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="min-w-[85vw] md:min-w-[400px] snap-center bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/10 relative glow-brown-hover transition-all duration-300 group">
+                    <i class="ph-fill ph-quotes text-5xl text-lab-brown/20 absolute top-6 right-6"></i>
+                    <div class="flex gap-1 mb-6">
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                    </div>
+                    <p class="font-sans text-lab-cream text-lg font-light leading-relaxed mb-6">
+                        "Upbeat coffee shop with amazing energy. The industrial lab aesthetic is incredibly well done, and the baristas know their science."
+                    </p>
+                    <div class="font-display font-semibold text-lab-white tracking-wide">— Michael D.</div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="min-w-[85vw] md:min-w-[400px] snap-center bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/10 relative glow-brown-hover transition-all duration-300 group">
+                    <i class="ph-fill ph-quotes text-5xl text-lab-brown/20 absolute top-6 right-6"></i>
+                    <div class="flex gap-1 mb-6">
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                    </div>
+                    <p class="font-sans text-lab-cream text-lg font-light leading-relaxed mb-6">
+                        "One of the best coffees we’ve had anywhere in KZN. Period. The setup is immaculate. I drive out of my way just to get beans here."
+                    </p>
+                    <div class="font-display font-semibold text-lab-white tracking-wide">— Craig T.</div>
+                </div>
+                
+                <!-- Review 4 -->
+                <div class="min-w-[85vw] md:min-w-[400px] snap-center bg-lab-black p-6 md:p-8 rounded-2xl border border-lab-white/10 relative glow-brown-hover transition-all duration-300 group">
+                    <i class="ph-fill ph-quotes text-5xl text-lab-brown/20 absolute top-6 right-6"></i>
+                    <div class="flex gap-1 mb-6">
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-fill ph-star text-lab-brown"></i>
+                        <i class="ph-half ph-star text-lab-brown"></i>
+                    </div>
+                    <p class="font-sans text-lab-cream text-lg font-light leading-relaxed mb-6">
+                        "Incredible setup. Visually stunning and the cortado is perfectly balanced. A true high-end experience."
+                    </p>
+                    <div class="font-display font-semibold text-lab-white tracking-wide">— Jessica R.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Preview -->
+    <section id="menu" class="py-24 bg-lab-black relative">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-lab-white uppercase tracking-wider mb-4 reveal">Extracted Perfection</h2>
+            <p class="font-sans text-lab-cream/60 max-w-2xl mx-auto mb-16 reveal">A glimpse into our core formulas. We source only strictly high-grown, specialty grade Arabica.</p>
+            
+            <div class="flex flex-col gap-4 max-w-3xl mx-auto mb-16 reveal">
+                <!-- Menu Item -->
+                <div class="group flex items-center justify-between p-6 border-b border-lab-white/10 hover:bg-lab-dark transition-colors rounded-lg">
+                    <div class="text-left">
+                        <h3 class="font-display text-xl font-semibold text-lab-white uppercase tracking-wide group-hover:text-lab-brown transition-colors">Cappuccino</h3>
+                        <p class="font-sans text-sm text-lab-cream/50 mt-1">1/3 Espresso, 1/3 Steamed Milk, 1/3 Micro-foam.</p>
+                    </div>
+                    <div class="font-sans font-medium text-lab-cream/80">R 42</div>
+                </div>
+                
+                <!-- Menu Item -->
+                <div class="group flex items-center justify-between p-6 border-b border-lab-white/10 hover:bg-lab-dark transition-colors rounded-lg">
+                    <div class="text-left">
+                        <h3 class="font-display text-xl font-semibold text-lab-white uppercase tracking-wide group-hover:text-lab-brown transition-colors">Cortado</h3>
+                        <p class="font-sans text-sm text-lab-cream/50 mt-1">Equal parts double espresso and perfectly textured milk.</p>
+                    </div>
+                    <div class="font-sans font-medium text-lab-cream/80">R 38</div>
+                </div>
+                
+                <!-- Menu Item -->
+                <div class="group flex items-center justify-between p-6 border-b border-lab-white/10 hover:bg-lab-dark transition-colors rounded-lg">
+                    <div class="text-left">
+                        <h3 class="font-display text-xl font-semibold text-lab-white uppercase tracking-wide group-hover:text-lab-brown transition-colors">Americano</h3>
+                        <p class="font-sans text-sm text-lab-cream/50 mt-1">Double espresso shot poured over 90°C filtered water.</p>
+                    </div>
+                    <div class="font-sans font-medium text-lab-cream/80">R 34</div>
+                </div>
+            </div>
+            
+            <button id="view-full-menu-btn" class="px-10 py-4 border border-lab-brown text-lab-brown hover:bg-lab-brown hover:text-lab-white font-sans font-semibold tracking-wider uppercase text-sm rounded-full transition-all reveal">
+                View Full Menu
+            </button>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section id="location" class="py-24 bg-lab-dark">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <!-- Left Info -->
+            <div class="reveal">
+                <h2 class="font-display text-4xl font-bold text-lab-white uppercase tracking-wider mb-8">Coordinates</h2>
+                
+                <div class="space-y-8 mb-10">
+                    <div class="flex items-start gap-4">
+                        <i class="ph ph-map-pin text-2xl text-lab-brown mt-1"></i>
+                        <div>
+                            <h4 class="font-display font-semibold text-lab-white text-lg tracking-wide uppercase mb-1">HQ / The Studios</h4>
+                            <p class="font-sans text-lab-cream/70 font-light">The Studios, Ballito Lifestyle Centre<br>Main Road, Ballito, 4420</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <i class="ph ph-clock text-2xl text-lab-brown mt-1"></i>
+                        <div>
+                            <h4 class="font-display font-semibold text-lab-white text-lg tracking-wide uppercase mb-1">Operating Hours</h4>
+                            <p class="font-sans text-lab-cream/70 font-light">Mon - Sat: 06:00 - 17:00<br>Sun: 07:00 - 15:00</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-4">
+                    <a href="https://maps.google.com/?q=The+Studios,+Coffee+Lab,+Ballito+Lifestyle+Centre,+Ballito,+4399" target="_blank" class="px-8 py-3 bg-lab-white text-lab-black hover:bg-lab-cream font-sans font-bold tracking-wider uppercase text-sm rounded-full transition-all flex items-center gap-2">
+                        <i class="ph ph-navigation-arrow text-lg"></i> Get Directions
+                    </a>
+                    <button class="px-8 py-3 border border-lab-white/20 text-lab-white hover:border-lab-white font-sans font-bold tracking-wider uppercase text-sm rounded-full transition-all flex items-center gap-2">
+                        <i class="ph ph-phone text-lg"></i> Call Now
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Right Map Placeholder -->
+            <div class="relative w-full h-[400px] rounded-2xl overflow-hidden border border-lab-white/10 group reveal">
+                <!-- Styling a static dark map feel since iframe can be problematic in some previews, but mimicking a high-end map integration -->
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop')] bg-cover bg-center grayscale contrast-125 brightness-50 group-hover:brightness-75 transition-all duration-700"></div>
+                <div class="absolute inset-0 bg-lab-brown/10 mix-blend-overlay"></div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                    <div class="w-12 h-12 bg-lab-black rounded-full border-2 border-lab-brown flex items-center justify-center glow-brown shadow-lg animate-bounce">
+                        <i class="ph-fill ph-flask text-lab-brown text-xl"></i>
+                    </div>
+                    <div class="mt-3 px-4 py-1.5 bg-lab-black/80 backdrop-blur-md border border-lab-white/10 rounded-full text-xs font-sans tracking-widest text-lab-white uppercase">
+                        Coffee LAB
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="relative py-32 overflow-hidden flex items-center justify-center">
+        <!-- Background -->
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1961&auto=format&fit=crop')] bg-cover bg-fixed bg-center grayscale-[50%]"></div>
+        <div class="absolute inset-0 bg-lab-black/80 backdrop-blur-sm"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-3xl reveal">
+            <i class="ph ph-lightning text-5xl text-lab-brown mb-6 drop-shadow-[0_0_15px_rgba(139,94,60,0.8)]"></i>
+            <h2 class="font-display font-extrabold text-4xl md:text-6xl text-lab-white mb-6 uppercase tracking-tight">
+                Your Daily Dose of <br><span class="text-lab-brown">Precision</span> Coffee.
+            </h2>
+            <p class="font-sans text-lg text-lab-cream/70 mb-10 font-light">Zero compromise. Engineered for those who demand the absolute best.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="px-10 py-4 bg-lab-brown text-lab-white font-sans font-semibold tracking-wider uppercase text-sm rounded-full glow-brown-hover transition-all">
+                    Visit Coffee LAB
+                </button>
+            </div>
+        </div>
+    </section>
+
+    </div> <!-- End of Home Page -->
+
+    <!-- Full Menu Page (Hidden by default) -->
+    <div id="full-menu-page" class="hidden min-h-screen bg-lab-black pt-32 pb-24">
+        <div class="max-w-5xl mx-auto px-6">
+            <button id="back-to-home-btn" class="mb-10 flex items-center gap-2 text-lab-cream/70 hover:text-lab-brown transition-colors font-sans tracking-wide uppercase text-sm">
+                <i class="ph ph-arrow-left text-xl"></i> Back to Home
+            </button>
+
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-lab-white uppercase tracking-wider mb-4">On The Go!</h2>
+                <p class="font-sans text-lab-brown uppercase tracking-widest text-sm max-w-2xl mx-auto leading-relaxed font-semibold">
+                    Organic, free range and locally sourced ingredients served in a whole wheat wrap or freshly baked panini
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <!-- Menu Item 1 -->
+                <div class="bg-lab-dark p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/30 transition-all duration-300">
+                    <h3 class="font-display text-xl md:text-2xl font-bold text-lab-white uppercase tracking-wide mb-2 md:mb-3">The Verde</h3>
+                    <p class="font-sans text-lab-cream/70 text-sm md:text-base leading-relaxed font-light">
+                        Olive oil marinated buffalo mozzarella, fresh and sundried tomatoes, salsa verde, fresh basil.
+                    </p>
+                </div>
+
+                <!-- Menu Item 2 -->
+                <div class="bg-lab-dark p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/30 transition-all duration-300">
+                    <h3 class="font-display text-xl md:text-2xl font-bold text-lab-white uppercase tracking-wide mb-2 md:mb-3">Ooohhmami</h3>
+                    <p class="font-sans text-lab-cream/70 text-sm md:text-base leading-relaxed font-light">
+                        Honey soy roast beef, sesame seeds, rocket, sharp cheddar, umami mayo.
+                    </p>
+                </div>
+
+                <!-- Menu Item 3 -->
+                <div class="bg-lab-dark p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/30 transition-all duration-300">
+                    <h3 class="font-display text-xl md:text-2xl font-bold text-lab-white uppercase tracking-wide mb-2 md:mb-3">The Ultimate Veggie</h3>
+                    <p class="font-sans text-lab-cream/70 text-sm md:text-base leading-relaxed font-light">
+                        Artichoke, olive and baby spinach salad, green garlic and parmesan aioli, sliced provolone, crushed almonds.
+                    </p>
+                </div>
+
+                <!-- Menu Item 4 -->
+                <div class="bg-lab-dark p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/30 transition-all duration-300">
+                    <h3 class="font-display text-xl md:text-2xl font-bold text-lab-white uppercase tracking-wide mb-2 md:mb-3">Lil' Pecker</h3>
+                    <p class="font-sans text-lab-cream/70 text-sm md:text-base leading-relaxed font-light">
+                        Grilled chicken with cashew nuts, peppadew pesto, caramelised onions, chipotle mayo, rocket and fresh avocado.
+                    </p>
+                </div>
+
+                <!-- Menu Item 5 -->
+                <div class="bg-lab-dark p-6 md:p-8 rounded-2xl border border-lab-white/5 hover:border-lab-brown/30 transition-all duration-300 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-2 md:mb-3">
+                        <h3 class="font-display text-xl md:text-2xl font-bold text-lab-white uppercase tracking-wide">I'm Pead...</h3>
+                        <span class="px-3 py-1 bg-lab-brown/20 text-lab-brown text-[10px] md:text-xs font-bold tracking-widest uppercase rounded-full border border-lab-brown/30">Vegan</span>
+                    </div>
+                    <p class="font-sans text-lab-cream/70 text-sm md:text-base leading-relaxed font-light">
+                        Crushed chickpeas marinated with capers, avocado, mustard vinaigrette and chopped nori with cucumber, baby leaf salad served on seeded ciabatta.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-lab-black border-t border-lab-white/5 py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="font-display font-bold text-xl tracking-[0.15em] text-lab-white">
+                COFFEE<span class="text-lab-brown">LAB</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="https://www.instagram.com/coffeelab_lifestyle?igsh=eHo3MnE2dXF6OW44" target="_blank" class="text-lab-cream/50 hover:text-lab-brown transition-colors"><i class="ph ph-instagram-logo text-2xl"></i></a>
+                <a href="https://www.facebook.com/coffeeLb2020" target="_blank" class="text-lab-cream/50 hover:text-lab-brown transition-colors"><i class="ph ph-facebook-logo text-2xl"></i></a>
+                <a href="#" class="text-lab-cream/50 hover:text-lab-brown transition-colors"><i class="ph ph-twitter-logo text-2xl"></i></a>
+            </div>
+            <div class="text-lab-cream/40 font-sans text-sm font-light">
+                &copy; 2026 Coffee LAB. Engineered in KZN.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox for Gallery -->
+    <div id="lightbox" class="fixed inset-0 z-[100] bg-lab-black/95 backdrop-blur-md hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <button id="lightbox-close" class="absolute top-8 right-8 text-lab-white hover:text-lab-brown text-4xl transition-colors">
+            <i class="ph ph-x"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="Enlarged gallery image" class="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.8)] scale-95 transition-transform duration-300">
+    </div>
+
+    <!-- JavaScript Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Preloader
+            const preloader = document.getElementById('preloader');
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    preloader.classList.add('opacity-0');
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 700);
+                }, 500); // Slight delay to ensure smooth feel
+            });
+
+            // 2. Navbar Glass Effect & Parallax Hero
+            const navbar = document.getElementById('navbar');
+            const heroBg = document.getElementById('hero-bg');
+            const heroContent = document.getElementById('hero-content');
+
+            window.addEventListener('scroll', () => {
+                let scrollY = window.scrollY;
+                
+                // Nav
+                if (scrollY > 50) {
+                    navbar.classList.add('glass-nav', 'py-4');
+                    navbar.classList.remove('py-6');
+                } else {
+                    navbar.classList.remove('glass-nav', 'py-4');
+                    navbar.classList.add('py-6');
+                }
+
+                // Parallax (only run if near top)
+                if (scrollY < window.innerHeight) {
+                    heroBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+                    heroContent.style.transform = `translateY(${scrollY * 0.2}px)`;
+                    heroContent.style.opacity = 1 - (scrollY / 700);
+                }
+            });
+
+            // 3. Mobile Menu Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileIcon = mobileBtn.querySelector('i');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            let menuOpen = false;
+
+            function toggleMenu() {
+                menuOpen = !menuOpen;
+                if (menuOpen) {
+                    mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                    mobileMenu.classList.add('opacity-100', 'pointer-events-auto');
+                    mobileIcon.classList.replace('ph-list', 'ph-x');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                    mobileMenu.classList.remove('opacity-100', 'pointer-events-auto');
+                    mobileIcon.classList.replace('ph-x', 'ph-list');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+
+            mobileBtn.addEventListener('click', toggleMenu);
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', toggleMenu);
+            });
+
+            // 4. Scroll Reveal Intersection Observer
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+
+            // 5. Reviews Slider Logic (Desktop Controls)
+            const slider = document.getElementById('reviews-slider');
+            const btnPrev = document.getElementById('prev-review');
+            const btnNext = document.getElementById('next-review');
+
+            if (btnNext && btnPrev) {
+                btnNext.addEventListener('click', () => {
+                    slider.scrollBy({ left: 400, behavior: 'smooth' });
+                });
+                btnPrev.addEventListener('click', () => {
+                    slider.scrollBy({ left: -400, behavior: 'smooth' });
+                });
+            }
+
+            // 6. Lightbox Gallery Logic
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxClose = document.getElementById('lightbox-close');
+
+            function openLightbox(src) {
+                lightboxImg.src = src;
+                lightbox.classList.remove('hidden');
+                // Trigger reflow
+                void lightbox.offsetWidth;
+                lightbox.classList.remove('opacity-0');
+                lightboxImg.classList.remove('scale-95');
+                lightboxImg.classList.add('scale-100');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.add('opacity-0');
+                lightboxImg.classList.remove('scale-100');
+                lightboxImg.classList.add('scale-95');
+                setTimeout(() => {
+                    lightbox.classList.add('hidden');
+                    lightboxImg.src = '';
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            }
+
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const src = item.getAttribute('data-src');
+                    openLightbox(src);
+                });
+            });
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                    closeLightbox();
+                }
+            });
+
+            // 7. Dynamic Page Navigation (Menu vs Home)
+            const homePage = document.getElementById('home-page');
+            const menuPage = document.getElementById('full-menu-page');
+            const viewFullMenuBtn = document.getElementById('view-full-menu-btn');
+            const backToHomeBtn = document.getElementById('back-to-home-btn');
+
+            if (viewFullMenuBtn && backToHomeBtn) {
+                viewFullMenuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    homePage.classList.add('hidden');
+                    menuPage.classList.remove('hidden');
+                    // Ensure nav becomes solid on new 'page'
+                    navbar.classList.add('glass-nav', 'py-4');
+                    navbar.classList.remove('py-6');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                });
+
+                backToHomeBtn.addEventListener('click', () => {
+                    menuPage.classList.add('hidden');
+                    homePage.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
